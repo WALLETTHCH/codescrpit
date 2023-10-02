@@ -196,4 +196,24 @@ function showdate(){
      $day = date("l");
 slow("\033[3;97mDay:=> $day $date  Time :=> $time \n",10000);}
     
+function savefile($namefile){
+system("clear");
+USER:
+if(!file_exists($namefile)){
+$user=readline(white(0)."User-agent".yellow(0).":");
+if($user>null){
+  $user1["useragent"]=$user;
+  save($namefile,$user1);
+}else{system("clear"); goto USER;}
+COOKIE:
+$cookie=readline(white(0)."Cookie".yellow(0).":");
+if($cookie>null){
+  $cookie1["cookie"]=$cookie;
+  save($namefile,$cookie1);
+}else{system("clear"); goto COOKIE;}
+}}
+
+
+
+
 
