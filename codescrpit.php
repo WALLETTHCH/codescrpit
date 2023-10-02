@@ -197,22 +197,60 @@ function showdate(){
 slow("\033[3;97mDay:=> $day $date  Time :=> $time \n",10000);}
     
 function savefile($namefile){
+  global $reset;
 system("clear");
 USER:
 if(!file_exists($namefile)){
-$user=readline(white(0)."User-agent".yellow(0).":");
+$user=readline(white(0)."User-agent".yellow(1).":".$reset);
 if($user>null){
   $user1["useragent"]=$user;
   save($namefile,$user1);
 }else{system("clear"); goto USER;}
 COOKIE:
-$cookie=readline(white(0)."Cookie".yellow(0).":");
+$cookie=readline(white(0)."Cookie".yellow(0).":".$reset);
 if($cookie>null){
   $cookie1["cookie"]=$cookie;
   save($namefile,$cookie1);
 }else{system("clear"); goto COOKIE;}
 }}
 
+function randomapikey(){
+  $a=rand(1,2);
+  if($a==1){
+  $b=rand(1,16);
+  return json_decode(file_get_contents("apikeyocr.json"),1)["apikeymain"]["0"]["main$b"];
+  }
+  if($a==2){
+  $c=rand(1,30);
+  return json_decode(file_get_contents("apikeyocr.json"),1)["apikeygeneral"]["0"]["general$c"];
+  }}
+  
+  function ocr($image,$text){
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.ocr.space/parse/image',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('language' => 'eng','isOverlayRequired' => 'false','filetype' => 'png','file'=> new CURLFILE($image),'OCREngine' => '2'),
+        CURLOPT_HTTPHEADER => array('apikey:'.randomapikey()),
+      ));
+      $response = curl_exec($curl);
+      curl_close($curl);
+      if($text==1){
+      $ocr=$response;
+      $text1=explode('","',explode('"ParsedText":"',$ocr)[1])[0];
+      $text1=str_replace('\n','',$text1);
+      $text1=preg_replace("/[^a-zA-Z0-9]/", "", $text1);
+      return $text1;
+      }elseif($text==0){
+      return $response;
+      }
+  }
 
 
 
