@@ -183,7 +183,10 @@ $symbolIndex = $i % count($symbols);
 $sn=1000;
 slow("               ".$var.'['.$res.']'.'Loading...'.$symboled[$symbolIndex]." \r",$sn);
 usleep(900000);
-echo "\r                                      \r";}}
+echo "\r                                            \r";
+if($res<1){break;}
+}
+}
 //noerror
 function noerror(){
 return error_reporting(0);
